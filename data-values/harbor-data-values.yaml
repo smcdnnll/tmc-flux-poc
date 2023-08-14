@@ -1,5 +1,5 @@
 namespace: tanzu-system-registry
-hostname: harbor.system.tanzu
+hostname: harbor.tkg.vclass.local
 port:
   https: 443
 logLevel: info
@@ -10,9 +10,9 @@ tlsCertificate:
 tlsCertificateSecretName:
 enableContourHttpProxy: true
 harborAdminPassword: VMware1!
-secretKey: 988AYwrZWswfNNtz
+secretKey: 12gWc8WoknuTIaoa
 database:
-  password: nxs08BRGwTpfAJnk
+  password: zBcu9A00etZorVLl
   shmSizeLimit:
   maxIdleConns:
   maxOpenConns:
@@ -20,14 +20,14 @@ exporter:
   cacheDuration:
 core:
   replicas: 1
-  secret: dY22M0JlXOqrpvEr
-  xsrfKey: BHBVhb1lmearYTqGVOudB32ypHN4C7dc
+  secret: QOuabrBMBFNhVhh2
+  xsrfKey: 3U5hoEkx5TMTt0JfUw9bO5TZhGr66nyF
 jobservice:
   replicas: 1
-  secret: BCxT1grFJ2ZPosmx
+  secret: yq8QWhmdTp0fpJFb
 registry:
   replicas: 1
-  secret: cNDdY1uQ8O4yRPfV
+  secret: Cdxnb9pq4CqhD0QZ
 notary:
   enabled: true
 trivy:
@@ -39,31 +39,31 @@ persistence:
   persistentVolumeClaim:
     registry:
       existingClaim: ""
-      storageClass:
+      storageClass: "k8s-storage"
       subPath: ""
       accessMode: ReadWriteOnce
       size: 50Gi
     jobservice:
       existingClaim: ""
-      storageClass:
+      storageClass: "k8s-storage"
       subPath: ""
       accessMode: ReadWriteOnce
       size: 1Gi
     database:
       existingClaim: ""
-      storageClass:
+      storageClass: "k8s-storage"
       subPath: ""
       accessMode: ReadWriteOnce
       size: 1Gi
     redis:
       existingClaim: ""
-      storageClass:
+      storageClass: "k8s-storage"
       subPath: ""
       accessMode: ReadWriteOnce
       size: 1Gi
     trivy:
       existingClaim: ""
-      storageClass:
+      storageClass: "k8s-storage"
       subPath: ""
       accessMode: ReadWriteOnce
       size: 5Gi
