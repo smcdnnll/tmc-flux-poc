@@ -14,9 +14,9 @@ contourHttpProxy:
   timeout: 0s
   idleTimeout: 5m
 harborAdminPassword: VMware1!
-secretKey: 988AYwrZWswfNNtz
+secretKey: 0123456789ABCDEF
 database:
-  password: nxs08BRGwTpfAJnk
+  password: zBcu9A00etZorVLl
   shmSizeLimit:
   maxIdleConns:
   maxOpenConns:
@@ -24,16 +24,16 @@ exporter:
   cacheDuration:
 core:
   replicas: 1
-  secret: dY22M0JlXOqrpvEr
-  xsrfKey: BHBVhb1lmearYTqGVOudB32ypHN4C7dc
+  secret: QOuabrBMBFNhVhh2
+  xsrfKey: 3U5hoEkx5TMTt0JfUw9bO5TZhGr66nyF
 jobservice:
   replicas: 0
-  secret: BCxT1grFJ2ZPosmx
+  secret: yq8QWhmdTp0fpJFb
 registry:
   replicas: 1
-  secret: cNDdY1uQ8O4yRPfV
+  secret: Cdxnb9pq4CqhD0QZ
 notary:
-  enabled: true
+  enabled: false
 trivy:
   enabled: true
   replicas: 1
@@ -45,38 +45,38 @@ persistence:
   persistentVolumeClaim:
     registry:
       existingClaim: ""
-      storageClass: ""
+      storageClass: "sp-tanzu"
       subPath: ""
       accessMode: ReadWriteOnce
-      size: 50Gi
+      size: 10Gi
     jobservice:
       jobLog:
         existingClaim: ""
-        storageClass: ""
+        storageClass: "sp-tanzu"
         subPath: ""
         accessMode: ReadWriteOnce
         size: 1Gi
       scanDataExports:
         existingClaim: ""
-        storageClass: ""
+        storageClass: "sp-tanzu"
         subPath: ""
         accessMode: ReadWriteOnce
         size: 1Gi
     database:
       existingClaim: ""
-      storageClass: ""
+      storageClass: "sp-tanzu"
       subPath: ""
       accessMode: ReadWriteOnce
       size: 1Gi
     redis:
       existingClaim: ""
-      storageClass: ""
+      storageClass: "sp-tanzu"
       subPath: ""
       accessMode: ReadWriteOnce
       size: 1Gi
     trivy:
       existingClaim: ""
-      storageClass: ""
+      storageClass: "sp-tanzu"
       subPath: ""
       accessMode: ReadWriteOnce
       size: 5Gi
