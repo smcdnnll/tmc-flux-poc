@@ -45,38 +45,38 @@ persistence:
   persistentVolumeClaim:
     registry:
       existingClaim: ""
-      storageClass: "sp-tanzu"
+      storageClass: "k8s-storage"
       subPath: ""
       accessMode: ReadWriteOnce
       size: 10Gi
     jobservice:
       jobLog:
         existingClaim: ""
-        storageClass: "sp-tanzu"
+        storageClass: "k8s-storage"
         subPath: ""
         accessMode: ReadWriteOnce
         size: 1Gi
       scanDataExports:
         existingClaim: ""
-        storageClass: "sp-tanzu"
+        storageClass: "k8s-storage"
         subPath: ""
         accessMode: ReadWriteOnce
         size: 1Gi
     database:
       existingClaim: ""
-      storageClass: "sp-tanzu"
+      storageClass: "k8s-storage"
       subPath: ""
       accessMode: ReadWriteOnce
       size: 1Gi
     redis:
       existingClaim: ""
-      storageClass: "sp-tanzu"
+      storageClass: "k8s-storage"
       subPath: ""
       accessMode: ReadWriteOnce
       size: 1Gi
     trivy:
       existingClaim: ""
-      storageClass: "sp-tanzu"
+      storageClass: "k8s-storage"
       subPath: ""
       accessMode: ReadWriteOnce
       size: 5Gi
