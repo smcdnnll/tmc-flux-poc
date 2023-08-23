@@ -1,5 +1,5 @@
 namespace: tanzu-system-registry
-hostname: harbor.system.tanzu
+hostname: harbor.tkg.vclass.local
 port:
   https: 443
 logLevel: info
