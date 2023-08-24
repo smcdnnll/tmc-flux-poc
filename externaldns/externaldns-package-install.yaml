@@ -13,7 +13,7 @@ metadata:
   namespace: packages
 spec:
   packageRef:
-    refName: externaldns.tanzu.vmware.com
+    refName: external-dns.tanzu.vmware.com
     versionSelection:
       constraints: 0.13.4+vmware.2-tkg.1
   serviceAccountName: externaldns-packages-sa
