@@ -8,7 +8,7 @@ secretGenerator:
 - name: externaldns-packages-values
   namespace: packages
   files:
-  - externaldns.yaml
+  - externaldns-data-values.yaml
   type: Opaque
   options:
     annotations:
