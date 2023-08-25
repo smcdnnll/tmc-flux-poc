@@ -1,0 +1,220 @@
+Student notes:
+==============
+API Token: TvMqelx-H_FTy41PpvSu_cUVjkVgkmBREAfjAinWDq-zpbadNwLqJVuFkqrApKer
+
+
+
+Lab commands:
+=============
+
+# Lab 4: Install and Authenticate VMware Tanzu Mission Control CLI
+
+## Task 1: Install the Tanzu CLI with the VMware Tanzu Mission Control CLI Plugin
+
+chmod +x ~/workspace/tanzu-cli-linux_amd64
+sudo install ~/workspace/tanzu-cli-linux_amd64 /usr/local/bin/tanzu
+tanzu
+
+## Task 2: Configure the Tanzu CLI Autocompletion
+
+echo 'source /etc/bash_completion' >> ~/.bashrc
+echo 'source <(tanzu completion bash)' >> ~/.bashrc
+source ~/.bashrc
+
+## Task 4: Use the CLI to Access VMware Tanzu Mission Control
+
+tanzu context create
+tanzu mission-control clustergroup list
+
+
+# Lab 7: Creating Workspaces
+
+## Task 2: Create a Workspace for Development Namespaces
+
+tanzu mission-control workspace list
+tanzu mission-control workspace create --help
+tanzu mission-control workspace create --dry-run > dev-ws.yaml
+code dev-ws.yaml
+tanzu mission-control workspace create -f dev-ws.yaml
+tanzu mission-control workspace list
+
+
+# Lab 8: Registering a Management Cluster
+
+## Task 1: Log In to the vSphere with Tanzu Supervisor Cluster
+
+kubectl vsphere login --server=https://172.20.11.111 --insecure-skip-tls-verify
+kubectl config get-contexts
+kubectl config use-context 172.20.11.111
+
+## Task 2: Register a vSphere with Tanzu Supervisor Cluster
+
+tanzu mission-control management-cluster register sa-supervisor-01 -c tkg-cg -k $HOME/.kube/config
+kubectl get all -n svc-tmc-c1006
+
+
+# Lab 14: Creating Access Policies and Observing their Impact
+
+## Task 1: Create Cluster Group Access
+
+tanzu mission-control iam add-binding -r clustergroup.view -g sso:appops@vsphere.local -s clustergroup -n tkg-cg
+tanzu mission-control iam add-binding -r cluster.admin -g sso:appops@vsphere.local -s clustergroup -n tkg-cg
+
+## Task 2: Create Workspace Access Policies
+
+tanzu mission-control iam add-binding -r workspace.edit -g sso:development@vsphere.local -s workspace -n dev-ws
+tanzu mission-control iam add-binding -r workspace.view -g sso:development@vsphere.local -s workspace -n prod-ws
+
+## Task 3: Use VMware Tanzu Mission Control to Access a Cluster
+
+tanzu mission-control cluster admin-kubeconfig get tkc-01 -m sa-supervisor-01 -p prod-vsphere-namespace-01 > $HOME/.kube/config
+kubectl get namespaces
+
+## Task 4: Deploy an Application Workload
+
+kubectl apply -f ~/workspace/allow-runasroot-clusterrole.yml 
+kubectl config set-context --current --namespace=prod-vmbeans-ns
+kubectl apply -f ~/workspace/vmbeans.yaml
+
+## Task 5: Log In as Different Users to Observe the Impact of Access Policies
+
+kubectl vsphere login --server 172.20.11.111 --vsphere-username appops-user@vsphere.local --tanzu-kubernetes-cluster-name tkc-01 --tanzu-kubernetes-cluster-namespace prod-vsphere-namespace-01 --insecure-skip-tls-verify
+kubectl get rolebinding -n prod-vmbeans-ns
+kubectl -n prod-vmbeans-ns describe rolebinding <ROLEBINDING-NAME>
+kubectl -n prod-vmbeans-ns describe rolebinding <ROLEBINDING-NAME>
+kubectl get pods -n prod-vmbeans-ns
+kubectl delete pod -n prod-vmbeans-ns <POD_NAME_FROM_LAST_STEP>
+kubectl vsphere logout
+kubectl vsphere login --server 172.20.11.111 --vsphere-username development-user@vsphere.local --tanzu-kubernetes-cluster-name tkc-01 --tanzu-kubernetes-cluster-namespace prod-vsphere-namespace-01 --insecure-skip-tls-verify
+kubectl get pods -A
+kubectl get pods -n prod-vmbeans-ns
+kubectl delete pod -n prod-vmbeans-ns <POD_NAME_FROM_LAST_STEP>
+kubectl vsphere login --server 172.20.11.111 --vsphere-username appops-user@vsphere.local --tanzu-kubernetes-cluster-name tkc-01 --tanzu-kubernetes-cluster-namespace prod-vsphere-namespace-01 --insecure-skip-tls-verify
+
+# Lab 15: Creating Image Registry Policies and Observing their Impact
+
+## Task 2: Redeploy an Application Workload
+kubectl config set-context --current --namespace=prod-vmbeans-ns
+kubectl delete -f ~/workspace/vmbeans.yaml
+kubectl apply -f ~/workspace/vmbeans.yaml
+
+## Task 3: Inspect the Image Registry Policies
+
+kubectl get all
+kubectl describe replicaset
+kubectl get opapolicy
+kubectl describe opapolicy orgp.prod-vmbeans-ns.allowed-registries.vmware-system-tmc-allowed-images-v1
+kubectl describe deployment vmbeans
+
+## Task 4: Update the Image Registry Policy
+
+kubectl delete -f ~/workspace/vmbeans.yaml
+kubectl apply -f ~/workspace/vmbeans.yaml
+kubectl get all
+
+#Lab 16: Creating Network Policies and Observing their Impact
+
+## Task 1: Create a Network Policy to Restrict Traffic
+
+kubectl get services
+
+## Task 2: Inspect the Network Policies
+
+kubectl get networkpolicies
+kubectl describe networkpolicy tmc.wsp.prod-vmbeans-ns.tmc-deny
+
+# Lab 17: Creating Security Policies and Observing their Impact
+
+## Task 2: Redeploy an Application Workload
+
+kubectl delete -f ~/workspace/vmbeans.yaml
+kubectl apply -f ~/workspace/vmbeans.yaml
+
+## Task 3: Inspect the Security Policies
+
+kubectl get all
+kubectl describe replicaset
+kubectl get opapolicy
+
+## Task 4: Update a Security Policy
+
+kubectl get opapolicy
+kubectl delete -f ~/workspace/vmbeans.yaml
+kubectl apply -f ~/workspace/vmbeans.yaml
+kubectl get all
+
+# Lab 18: Creating Quota Policies and Observing their Impact
+
+## Task 2: Scale Up an Application
+
+kubectl get deployment vmbeans-deployment
+kubectl scale --replicas=3 deployment vmbeans-deployment
+
+
+## Task 3: Inspect the Quota Policies
+
+kubectl get all
+kubectl describe replicaset
+kubectl get resourcequota
+kubectl describe resourcequota tmc.orgp.cg-quota
+
+## Task 4: Update a Quota Policy
+
+kubectl get resourcequota
+kubectl get all
+kubectl scale --replicas=2 deployment vmbeans-deployment
+kubectl scale --replicas=3 deployment vmbeans-deployment
+
+# Lab 19: Creating Custom Policies and Observing their Impact
+
+## Task 3: Inspect the Custom Policies
+
+kubectl get opapolicy
+kubectl describe opapolicy cgp.tkg-cg-ns-require-label.tmc-require-labels-v1
+
+# Lab 20: Creating Mutation Policies and Observing their Imapact
+
+## Task 2: Inspect the Label Mutation Policy
+
+kubectl config set-context --current --namespace=prod-vmbeans-ns
+kubectl get opapolicy
+kubectl describe opapolicy tmc.p2.cgp.lb.tkg-mutation-label
+kubectl delete -f ~/workspace/vmbeans.yaml
+kubectl apply -f ~/workspace/vmbeans.yaml
+kubectl get deployment --show-labels
+
+## Task 4: Inspect the Pod Security Mutation Policy
+
+kubectl config set-context --current --namespace=prod-vmbeans-ns
+kubectl get opapolicy
+kubectl describe opapolicy tmc.p2.cgp.user-init.tkg-mutation-pod-security
+kubectl describe opapolicy tmc.p2.cgp.user.tkg-mutation-pod-security
+kubectl delete -f ~/workspace/vmbeans.yaml
+kubectl apply -f ~/workspace/vmbeans.yaml
+kubectl get pods
+kubectl describe pod <vmbeans-deployment-xxxxxxxx>
+kubectl delete -f ~/workspace/vmbeans.yaml
+kubectl apply -f ~/workspace/vmbeans.yaml
+kubectl get pods
+
+# Lab 21: Installing Packages Using Catalog
+
+## Task 2: Install the Fluent Bit Package Using the VMware Tanzu Mission Control CLI and the Configuration File
+
+tanzu mission-control tanzupackage package list | grep fluent-bit
+tanzu mission-control tanzupackage install create -f ~/workspace/fluentbit-cli.yaml
+tanzu mission-control cluster admin-kubeconfig get tkc-01 -m sa-supervisor-01 -p dev-vsphere-namespace-01 > $HOME/.kube/config
+kubectl get all -n tanzu-system-logging
+## Task 3: Scale Up an Application to Generate Logs
+
+kubectl config set-context --current --namespace=prod-vmbeans-ns
+kubectl get deployment vmbeans-deployment
+kubectl scale --replicas=4 deployment vmbeans-deployment
+
+# Lab 23: Deploying an Application Using a Helm Chart
+
+## Task 4: View the Wordpress Application
+
+kubectl get all -n tanzu-helm-resources
+kubectl get services -n tanzu-helm-resources
+
