@@ -1,6 +1,6 @@
 Student notes:
 ==============
-API Token: TvMqelx-H_FTy41PpvSu_cUVjkVgkmBREAfjAinWDq-zpbadNwLqJVuFkqrApKer
+API Token: 
 
 
 
@@ -49,7 +49,7 @@ kubectl config use-context 172.20.11.111
 
 ## Task 2: Register a vSphere with Tanzu Supervisor Cluster
 
-tanzu mission-control management-cluster register sa-supervisor-01 -c tkg-cg -k $HOME/.kube/config
+tanzu tmc management-cluster register sa-supervisor-01 -c tkg-cg -k $HOME/.kube/config
 kubectl get all -n svc-tmc-c1006
 
 
@@ -187,8 +187,8 @@ kubectl get deployment --show-labels
 
 kubectl config set-context --current --namespace=prod-vmbeans-ns
 kubectl get opapolicy
-kubectl describe opapolicy tmc.p2.cp.user-init.tkg-mutation-pod-security
-kubectl describe opapolicy tmc.p2.cp.user.tkg-mutation-pod-security
+kubectl describe opapolicy tmc.p1.cp.user-init.tkg-mutation-pod-security
+kubectl describe opapolicy tmc.p1.cp.user.tkg-mutation-pod-security
 kubectl delete -f ~/workspace/vmbeans.yaml
 kubectl apply -f ~/workspace/vmbeans.yaml
 kubectl get pods
@@ -205,6 +205,7 @@ tanzu mission-control tanzupackage package list | grep fluent-bit
 tanzu mission-control tanzupackage install create -f ~/workspace/fluentbit-cli.yaml
 tanzu mission-control cluster admin-kubeconfig get tkc-01 -m sa-supervisor-01 -p dev-vsphere-namespace-01 > $HOME/.kube/config
 kubectl get all -n tanzu-system-logging
+
 ## Task 3: Scale Up an Application to Generate Logs
 
 kubectl config set-context --current --namespace=prod-vmbeans-ns
@@ -218,3 +219,9 @@ kubectl scale --replicas=4 deployment vmbeans-deployment
 kubectl get all -n tanzu-helm-resources
 kubectl get services -n tanzu-helm-resources
 
+## Lab 24: Data Protection
+
+### Task 4: Restore from a Backup
+
+chmod 777 ~/workspace/break.sh
+~/workspace/break.sh
