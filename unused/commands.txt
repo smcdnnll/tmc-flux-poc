@@ -187,8 +187,8 @@ kubectl get deployment --show-labels
 
 kubectl config set-context --current --namespace=prod-vmbeans-ns
 kubectl get opapolicy
-kubectl describe opapolicy tmc.p2.cgp.user-init.tkg-mutation-pod-security
-kubectl describe opapolicy tmc.p2.cgp.user.tkg-mutation-pod-security
+kubectl describe opapolicy tmc.p2.cp.user-init.tkg-mutation-pod-security
+kubectl describe opapolicy tmc.p2.cp.user.tkg-mutation-pod-security
 kubectl delete -f ~/workspace/vmbeans.yaml
 kubectl apply -f ~/workspace/vmbeans.yaml
 kubectl get pods
